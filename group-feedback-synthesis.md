@@ -1,21 +1,73 @@
-# Group Feedback Synthesis
+# GROUP FEEDBACK SYNTHESIS (TỔNG HỢP PHẢN HỒI CỦA NHÓM 3H)
 
-*Hoặc dán link artifact tổng hợp chung của nhóm tại đây:*
-- **Link tài liệu tổng hợp chung:** [Dán link tài liệu tổng hợp của nhóm tại đây]
+**Nhóm:** 3H  
+**Case:** Case B — AI Notes: Personal Learning Notes  
+**Phiên bản:** Tổng hợp kết quả thử nghiệm 3 Option A, B, C từ 3 tester ngoài nhóm.
 
 ---
 
-## Tổng hợp phản hồi từ tất cả các phiên test của nhóm
-*(Dùng để đúc rút các pattern chung)*
+## 1. THÔNG TIN CÁC PHIÊN THỬ NGHIỆM
 
-### 1. Phân tích các Pattern (Mẫu hành vi/Phản hồi lặp lại)
-- **Pattern thành công (Những gì hoạt động tốt):**
-  - [Mô tả pattern]
-- **Pattern lỗi/Khó khăn (Pain points chung):**
-  - [Mô tả pain points]
+| Tester | Tên / Bối cảnh | Option trọng tâm được thử nghiệm |
+| :--- | :--- | :--- |
+| **Tester 01** | Khanh | Option C (AI-Led) $\rightarrow$ Option A (User-Led) |
+| **Tester 02** | Trung | Option B (Co-Creation) |
+| **Tester 03** | Đức | Tổng hợp trải nghiệm A, B, C |
 
-### 2. Hành động tiếp theo (Next Change)
-- [Những thay đổi cụ thể cần thực hiện đối với sản phẩm/prototype dựa trên feedback]
+---
 
-### 3. Những giả định chưa được chứng minh (Still Unproven)
-- [Những điểm/giả định nào vẫn cần kiểm chứng thêm trong các phiên test tiếp theo]
+## 2. GHI CHÉP CHI TIẾT CÁC PHIÊN TEST (OBSERVATIONS & FEEDBACK)
+
+### Phiên Test 1 — Tester 01 (Khanh)
+- **Nhiệm vụ (Task):** Trải nghiệm ghi chú tự động ở Option C (AI-Led), sau đó thử dùng Option A (User-Led) để yêu cầu AI giải thích thuật ngữ khó bôi đen.
+- **Hành vi quan sát được (Observed Behaviors):**
+  - Nhanh chóng phát hiện ra thẻ ghi chú AI Proactive ở Sidebar phải (Option C), nhưng thể hiện sự ngập ngừng/hoài nghi về tính chính xác và độ liên quan của ghi chú tự động đối với nhu cầu cá nhân.
+  - Khi chuyển qua Option A, tester tương tác tích cực với thao tác bôi đen từ khóa để gọi AI, nhưng gặp rào cản nhỏ do độ nhạy của thao tác chọn văn bản trên prototype.
+- **Phản hồi nguyên văn & Góp ý từ Tester:**
+  - *"Ghi chú AI tự động khá tiện và giải thích dễ hiểu, nhưng hệ thống cần biết người dùng có thực sự cần dùng tới giải thích đó hay không để tránh làm loãng nội dung."*
+  - **Cá nhân hóa nội dung:** Cần có cơ chế lưu trữ các giải thích đã tạo và tùy chỉnh độ sâu giải thích theo trình độ/gu học tập (vd: giải thích bằng ví dụ đời sống vs. phân tích kỹ thuật sâu).
+  - **Cấu trúc thông tin:** Đề xuất tách thành nhiều thẻ note kiến thức nhỏ (Granular Multi-cards) cho từng khái niệm trên slide thay vì gộp chung vào 1 thẻ tóm tắt duy nhất.
+
+### Phiên Test 2 — Tester 02 (Trung)
+- **Nhiệm vụ (Task):** Trải nghiệm Option B (Co-Creation) bằng thao tác nối các khối khái niệm để kích hoạt Mini-Quiz và kiểm tra thanh công cụ vẽ trên slide.
+- **Hành vi quan sát được (Observed Behaviors):**
+  - Thể hiện sự hứng thú cao khi nối 2 ô Guideline và xuất hiện Mini-Quiz gợi mở tư duy.
+  - Tỏ ra bối rối ngắn khi phát hiện các công cụ như Bút vẽ / Highlight trên thanh Reader Toolbar chỉ mang tính chất mô phỏng giao diện (Static UI Mockup) chứ chưa tương tác vẽ tự do trên canvas.
+- **Phản hồi nguyên văn & Góp ý từ Tester:**
+  - *"Ý tưởng AI đóng vai trò Coach đặt câu hỏi gợi mở rất hay, giúp mình phải thực sự suy nghĩ và nhớ bài lâu hơn."*
+  - **Thiếu không gian tổng hợp thắc mắc:** AI đã tạo ghi chú bài học nhưng chưa có khu vực riêng để ghi nhận các câu hỏi/thắc mắc cá nhân do người học tự gõ.
+  - **Đề xuất UX:** Cần bổ sung một bảng/sổ tay tổng hợp ghi chú nằm ngay bên cạnh slide để theo dõi mạch học tập.
+
+### Phiên Test 3 — Tester 03 (Đức)
+- **Nhiệm vụ (Task):** Đánh giá và so sánh luồng ghi chú trên cả 3 Option (A, B, C).
+- **Hành vi quan sát được (Observed Behaviors):**
+  - Tập trung so sánh khu vực Sidebar phải giữa Option B và Option C; có thói quen vừa đọc vừa gõ lại thắc mắc cá nhân để chuẩn bị hỏi giảng viên.
+- **Phản hồi nguyên văn & Góp ý từ Tester:**
+  - Đồng quan điểm với Tester 02: AI tự tạo note bài học là tốt, nhưng trong lúc đọc slide người học luôn phát sinh thắc mắc riêng. Nếu hệ thống không cung cấp chỗ để gõ và lưu lại các thắc mắc này thì người học vẫn phải dùng app ngoài (Notion/Word).
+  - **Đề xuất UX:** Bắt buộc tích hợp một Sidebar/Drawer "Sổ tay cá nhân" tập trung, cho phép lưu trữ song song cả note do AI đề xuất và ghi chú/câu hỏi tự gõ của người học.
+
+---
+
+## 3. PHÂN TÍCH CÁC PATTERN & ĐÚC KẾT (KEY FINDINGS)
+
+### Pattern thành công (Những gì hoạt động tốt)
+- **Tương tác chủ động (Option A):** Thao tác bôi đen và tùy chỉnh phong cách giải thích (Feynman vs Technical) giúp người học kiểm soát thông tin đầu vào tốt hơn.
+- **Học tập chủ động (Option B):** Cơ chế AI đóng vai trò Coach đặt câu hỏi (Mini-quiz) nhận được phản hồi tích cực nhờ tăng khả năng tập trung và ghi nhớ bài học.
+- **Tiện ích tích hợp (Personal Notebook):** Ý tưởng lưu ghi chú trực tiếp vào sổ tay cá nhân giúp rút ngắn thời gian sao chép thủ công.
+
+### Rào cản & Pain points chung
+- **Hành vi thụ động (Option C):** Thẻ ghi chú tự động dễ bị lướt qua hoặc tạo cảm giác hoài nghi về độ tin cậy nếu không ghi rõ nguồn gốc.
+- **Unmet Need (Ghi chú tự gõ):** Người học luôn có nhu cầu tự ghi lại thắc mắc cá nhân thay vì chỉ đọc thông tin AI cung cấp.
+- **Giới hạn mô phỏng (Fidelity limitation):** Công cụ vẽ, highlight chưa hoạt động thực tế khiến trải nghiệm kiểm thử bị gián đoạn.
+
+---
+
+## 4. HÀNH ĐỘNG TIẾP THEO (NEXT CHANGE & STILL UNPROVEN)
+
+### Thay đổi tiếp theo (Next Change)
+- **Tích hợp tính năng Ghi chú cá nhân:** Bổ sung ô nhập liệu tự do ở sidebar để người học tự đặt câu hỏi hoặc gõ chú thích riêng.
+- **Cấu trúc lại Option C:** Tách biệt rõ ràng phần [Khái niệm cốt lõi] lấy từ slide và phần [Ví dụ thực tế do AI gợi ý] để tăng độ tin cậy.
+
+### Những giả định chưa được chứng minh (Still Unproven)
+- Liệu người học có duy trì việc trả lời Mini-Quiz (Option B) lâu dài hay sẽ cảm thấy phiền phức sau một thời gian sử dụng?
+- Mức độ chính xác của AI khi tự động trích xuất các slide toán học phức tạp.
