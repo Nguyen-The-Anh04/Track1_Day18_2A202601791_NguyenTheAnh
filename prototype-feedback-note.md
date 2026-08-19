@@ -1,41 +1,58 @@
-# Prototype Feedback Note
+# PROTOTYPE FEEDBACK NOTE (CÁ NHÂN FACILITATE)
 
-*Phiên thử nghiệm (User Testing) do chính học viên Kim Mạnh Hưng đóng vai trò Facilitator để ghi nhận phản hồi từ các tester ngoài nhóm đối với 3 phương án thiết kế A/B/C.*
-
----
-
-## 1. Người tham gia Test (Tester ngoài nhóm)
-- **Tester 01:** Khanh
-- **Tester 02:** Trung
-- **Tester 03:** Đức
+**Người facilitate:** Kim Mạnh Hưng (MHV: 2A202601679)  
+**Vai trò:** Facilitator chính cho các phiên User Testing với 3 testers ngoài nhóm trên 3 Solution Options (A, B, C).  
+**Thời gian thực hiện:** Day 18 — Chặng 6 (User Testing & Observation)
 
 ---
 
-## 2. Ghi chép chi tiết các phiên test (Observations & Feedback)
+## 1. THÔNG TIN NGƯỜI THAM GIA TEST (TESTERS NGOÀI NHÓM)
 
-### Phiên Test 1 (Với Khanh)
-- **Nhiệm vụ (Task) thực hiện:** Thử nghiệm **Option C (AI-Led)** để xem ghi chú tự động và **Option A (User-Led)** để yêu cầu AI giải thích thuật ngữ khó.
-- **Hành vi/Quan sát (User behavior):**
-  - Khanh nhanh chóng nhận ra bảng ghi chú AI tự động ở Sidebar phải (Option C) nhưng hơi băn khoăn liệu các ghi chú này có thực sự trúng ý mình cần không.
-  - Khi chuyển qua Option A, tester rất thích việc chủ động chọn từ để AI giải thích, tuy nhiên thao tác bôi đen đôi lúc chưa nhạy.
-- **Phản hồi từ Tester:**
-  - AI ghi chú tự động rất tiện lợi, giải thích dễ hiểu.
-  - *Góp ý:* Cần lưu ý xem người dùng có thực sự cần dùng tới giải thích đó hay không để tránh làm loãng nội dung. Hệ thống cần hỗ trợ lưu lại các giải thích đã tạo và cá nhân hóa cách giải thích theo trình độ/gu của từng người học (ví dụ: dùng nhiều ví dụ đời sống hoặc đi sâu vào kỹ thuật).
-  - *Đề xuất:* Nên bổ sung thêm nhiều thẻ note kiến thức khác nhau trên cùng 1 slide thay vì chỉ tập trung vào một khái niệm duy nhất.
+| Tester | Tên / Bối cảnh | Option trọng tâm được thử nghiệm |
+| :--- | :--- | :--- |
+| **Tester 01** | Khanh | Option C (AI-Led) $\rightarrow$ Option A (User-Led) |
+| **Tester 02** | Trung | Option B |
+| **Tester 03** | Đức | Tổng hợp trải nghiệm A, B, C |
 
-### Phiên Test 2 (Với Trung)
-- **Nhiệm vụ (Task) thực hiện:** Thử nghiệm **Option B (Co-Creation)** bằng cách kết nối các khái niệm để làm Mini-Quiz và kiểm tra thanh công cụ vẽ trên slide.
-- **Hành vi/Quan sát:**
-  - Trung hào hứng với việc nối 2 ô Guideline để tạo quiz thử thách nhưng bối rối khi thấy các công cụ vẽ như bút viết, highlight chưa hoạt động thực tế mà mới chỉ là các nút bấm mô phỏng.
-- **Phản hồi từ Tester:**
-  - Ý tưởng AI làm Coach gợi mở câu hỏi để tự đúc kết ghi chú rất hay và giúp nhớ lâu.
-  - *Góp ý:* AI có ghi chú note bài học nhưng chưa có khu vực để tổng hợp lại những thắc mắc hoặc ghi chú tự tay người dùng viết ra. Cần bổ sung tính năng tổng hợp note (giống như sổ tay/notebook) nằm ngay bên cạnh để người dùng dễ theo dõi lộ trình học.
-  - *Nhận xét:* Tính năng highlight và khoanh vùng trên slide thực chất vẫn mới chỉ dừng lại ở mức tượng trưng (chưa tương tác vẽ tự do mượt mà).
+---
 
-### Phiên Test 3 (Với Đức)
-- **Nhiệm vụ (Task) thực hiện:** Thử nghiệm tổng hợp cả 3 phương án để so sánh trải nghiệm ghi chú.
-- **Hành vi/Quan sát:**
-  - Đức tập trung so sánh bảng sidebar ghi chú của Option B và Option C. Người học này có thói quen vừa đọc vừa ghi chú lại câu hỏi của mình để hỏi giảng viên sau.
-- **Phản hồi từ Tester:**
-  - Đồng ý với ý kiến của Trung. AI tự động ghi chú bài học là tốt, nhưng nếu người học có thắc mắc riêng phát sinh trong quá trình đọc slide thì hệ thống chưa có chỗ để họ tự ghi chép lại hoặc tổng hợp chung vào một chỗ bên cạnh slide.
-  - *Đề xuất:* Bắt buộc phải có một sidebar hoặc drawer "Sổ tay cá nhân" tổng hợp mọi thắc mắc và ghi chú của người học để ôn tập tập trung.
+## 2. GHI CHÉP CHI TIẾT CÁC PHIÊN TEST (OBSERVATIONS & FEEDBACK)
+
+### 🟢 Phiên Test 1 — Tester 01 (Khanh)
+- **Nhiệm vụ (Task):** Trải nghiệm ghi chú tự động ở Option C (AI-Led), sau đó thử dùng Option A (User-Led) để yêu cầu AI giải thích thuật ngữ khó bôi đen.
+- **Hành vi quan sát được (Observed Behaviors):**
+  - Nhanh chóng phát hiện ra thẻ ghi chú AI Proactive ở Sidebar phải (Option C), nhưng thể hiện sự ngập ngừng/hoài nghi về tính chính xác và độ liên quan của ghi chú tự động đối với nhu cầu cá nhân.
+  - Khi chuyển qua Option A, tester tương tác tích cực với thao tác bôi đen từ khóa để gọi AI, nhưng gặp rào cản nhỏ do độ nhạy của thao tác chọn văn bản trên prototype.
+- **Phản hồi nguyên văn & Góp ý từ Tester:**
+  - *"Ghi chú AI tự động khá tiện và giải thích dễ hiểu, nhưng hệ thống cần biết người dùng có thực sự cần dùng tới giải thích đó hay không để tránh làm loãng nội dung."*
+  - **Cá nhân hóa nội dung:** Cần có cơ chế lưu trữ các giải thích đã tạo và tùy chỉnh độ sâu giải thích theo trình độ/gu học tập (vd: giải thích bằng ví dụ đời sống vs. phân tích kỹ thuật sâu).
+  - **Cấu trúc thông tin:** Đề xuất tách thành nhiều thẻ note kiến thức nhỏ (Granular Multi-cards) cho từng khái niệm trên slide thay vì gộp chung vào 1 thẻ tóm tắt duy nhất.
+
+### 🟡 Phiên Test 2 — Tester 02 (Trung)
+- **Nhiệm vụ (Task):** Trải nghiệm Option B (Co-Creation) bằng thao tác nối các khối khái niệm để kích hoạt Mini-Quiz và kiểm tra thanh công cụ vẽ trên slide.
+- **Hành vi quan sát được (Observed Behaviors):**
+  - Thể hiện sự hứng thú cao khi nối 2 ô Guideline và xuất hiện Mini-Quiz gợi mở tư duy.
+  - Tỏ ra bối rối ngắn khi phát hiện các công cụ như Bút vẽ / Highlight trên thanh Reader Toolbar chỉ mang tính chất mô phỏng giao diện (Static UI Mockup) chứ chưa tương tác vẽ tự do trên canvas.
+- **Phản hồi nguyên văn & Góp ý từ Tester:**
+  - *"Ý tưởng AI đóng vai trò Coach đặt câu hỏi gợi mở rất hay, giúp mình phải thực sự suy nghĩ và nhớ bài lâu hơn."*
+  - **Thiếu không gian tổng hợp thắc mắc:** AI đã tạo ghi chú bài học nhưng chưa có khu vực riêng để ghi nhận các câu hỏi/thắc mắc cá nhân do người học tự gõ.
+  - **Đề xuất UX:** Cần bổ sung một bảng/sổ tay tổng hợp ghi chú nằm ngay bên cạnh slide để theo dõi mạch học tập.
+
+### 🔵 Phiên Test 3 — Tester 03 (Đức)
+- **Nhiệm vụ (Task):** Đánh giá và so sánh luồng ghi chú trên cả 3 Option (A, B, C).
+- **Hành vi quan sát được (Observed Behaviors):**
+  - Tập trung so sánh khu vực Sidebar phải giữa Option B và Option C; có thói quen vừa đọc vừa gõ lại thắc mắc cá nhân để chuẩn bị hỏi giảng viên.
+- **Phản hồi nguyên văn & Góp ý từ Tester:**
+  - Đồng quan điểm với Tester 02: AI tự tạo note bài học là tốt, nhưng trong lúc đọc slide người học luôn phát sinh thắc mắc riêng. Nếu hệ thống không cung cấp chỗ để gõ và lưu lại các thắc mắc này thì người học vẫn phải dùng app ngoài (Notion/Word).
+  - **Đề xuất UX:** Bắt buộc tích hợp một Sidebar/Drawer "Sổ tay cá nhân" tập trung, cho phép lưu trữ song song cả note do AI đề xuất và ghi chú/câu hỏi tự gõ của người học.
+
+---
+
+## 3. ĐÚC KẾT & RÀO CẢN CHÍNH NÊN ĐIỀU CHỈNH (SUMMARY OF KEY FINDINGS)
+
+- **Rào cản về cá nhân hóa & Độ phủ (Need for Granular & Personalized Notes):**  
+  Một thẻ AI Note chung chung chưa đáp ứng đủ nhu cầu. Cần chia nhỏ theo từng thuật ngữ và cho phép tùy chỉnh phong cách giải thích (Feynman vs Technical).
+- **Khoảng trống về ghi nhận thắc mắc cá nhân (Unmet Need for Personal Q&A):**  
+  Các Option hiện tại tập trung nhiều vào việc AI cung cấp kiến thức (Output) mà chưa cho phép người học ghi lại câu hỏi / thắc mắc tự thân trong lúc đọc slide.
+- **Mô phỏng công cụ vẽ trên Slide (Prototype Limitation):**  
+  Nhu cầu vẽ/khoanh vùng trực tiếp là có thật. Cần làm rõ phạm vi mô phỏng (fidelity scope) để tester không bị ngắt mạch trải nghiệm.
