@@ -6,7 +6,7 @@
 - **Tên nhóm:** 3H
 - **Case đã chọn:** Case B — AI Notes: Personal Learning Notes
 - **Thành viên trong nhóm:**
-  - Cao Hữu Phúc (MHV: 2A202601283) (Trợ giảng & Facilitator Option A)
+  - Cao Hữu Phúc (MHV: 2A202601283) (Facilitator Option A)
   - Kim Mạnh Hưng (MHV: 2A202601679) (Facilitator Option B)
   - Nguyễn Thế Anh (MHV: 2A202601791) (Facilitator Option C)
 
