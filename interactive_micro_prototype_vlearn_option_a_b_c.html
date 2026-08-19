@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-950 font-sans antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VLearn AI Studio — Human-AI Micro-Prototype (Group 3H)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'floating 3s ease-in-out infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                    },
+                    keyframes: {
+                        floating: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-6px)' }
+                        },
+                        shimmer: {
+                            'from': { backgroundPosition: '0 0' },
+                            'to': { backgroundPosition: '-200% 0' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 999px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        .glass-panel { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); }
+        .glow-indigo { box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.35); }
+        .glow-amber { box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.35); }
+        .glow-emerald { box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.35); }
+        .selection-active { outline: 2px dashed #6366f1; outline-offset: 4px; background-color: rgba(99, 102, 241, 0.08) !important; }
+        .connector-active { outline: 2.5px solid #f59e0b; box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
+    </style>
+</head>
+<body class="h-full flex flex-col overflow-hidden text-slate-100 bg-slate-950 select-none">
+
+    <!-- TOP CONTROL BAR -->
+    <header class="bg-slate-900/90 glass-panel border-b border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 shrink-0 z-40">
+        <!-- Logo & Project Metadata -->
+        <div class="flex items-center space-x-3">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 text-white flex items-center justify-center font-black text-sm shadow-md shadow-indigo-500/30 ring-1 ring-white/20">
+                    3H
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-white font-bold text-sm tracking-tight">VLearn AI Studio</span>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 font-semibold border border-indigo-500/30">Case B: AI Notes</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 font-medium hidden sm:block">Track 1 · Day 18 — Human-AI Interaction Prototypes</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CENTER: OPTION SWITCHER (KEY TESTER CONTROL) -->
+        <div class="flex items-center bg-slate-950/80 p-1 rounded-xl border border-slate-800 shadow-inner">
+            <button onclick="switchOption('A')" id="btn-opt-A" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 bg-indigo-600 text-white shadow-md shadow-indigo-600/30">
+                <i class="fa-solid fa-hand-pointer text-xs"></i>
+                <span>Opt A: User-Led</span>
+            </button>
+            <button onclick="switchOption('B')" id="btn-opt-B" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-diagram-project text-xs"></i>
+                <span>Opt B: Co-Creation</span>
+            </button>
+            <button onclick="switchOption('C')" id="btn-opt-C" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                <span>Opt C: AI-Led</span>
+            </button>
+        </div>
+
+        <!-- RIGHT UTILITIES -->
+        <div class="flex items-center space-x-2">
+            <!-- Tester Rubric Modal Trigger -->
+            <button onclick="toggleTesterGuideModal()" title="Hướng dẫn Tester & Tiêu chí Đánh giá" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-lg text-xs font-medium border border-amber-500/30 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-clipboard-check text-amber-400"></i>
+                <span class="hidden md:inline">Tiêu chí 5 Gate</span>
+            </button>
+
+            <!-- Reset -->
+            <button onclick="resetPrototypeState()" title="Khôi phục trạng thái ban đầu" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-medium border border-slate-700 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-arrow-rotate-left text-xs"></i>
+                <span class="hidden lg:inline">Reset</span>
+            </button>
+
+            <!-- Notebook Drawer Button -->
+            <button onclick="toggleNotebookDrawer()" class="px-3 py-1.5 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
+                <i class="fa-solid fa-book-bookmark text-emerald-400"></i>
+                <span>Sổ tay (<span id="notebook-count" class="font-bold">0</span>)</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN BODY LAYOUT -->
+    <div class="flex-grow flex overflow-hidden relative">
+
+        <!-- LEFT SIDEBAR: SLIDE LIST & INTERACTION HINT -->
+        <aside id="left-sidebar" class="w-64 bg-slate-900/60 border-r border-slate-800/80 flex-col hidden lg:flex shrink-0">
+            <div class="p-3 border-b border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-list-check text-indigo-400"></i> Bài giảng mẫu</span>
+                <span class="text-[11px] font-mono px-1.5 py-0.5 rounded bg-slate-800 text-indigo-300">Slide 7/43</span>
+            </div>
+            
+            <!-- Slide Thumbnails list -->
+            <div class="flex-grow overflow-y-auto custom-scrollbar p-2 space-y-1.5">
+                <div onclick="selectSlide(5)" id="thumb-slide-5" class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800/80 text-slate-400 text-xs font-medium flex items-center gap-2 cursor-pointer hover:bg-slate-800/60 hover:text-slate-200 transition">
+                    <span class="w-5 h-5 rounded-md bg-slate-800 flex items-center justify-center font-mono text-[10px]">5</span>
+                    <span class="truncate">Capability Limits</span>
+                </div>
+                <div onclick="selectSlide(6)" id="thumb-slide-6" class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800/80 text-slate-400 text-xs font-medium flex items-center gap-2 cursor-pointer hover:bg-slate-800/60 hover:text-slate-200 transition">
+                    <span class="w-5 h-5 rounded-md bg-slate-800 flex items-center justify-center font-mono text-[10px]">6</span>
+                    <span class="truncate">Setting Expectations</span>
+                </div>
+                <!-- Active Slide 7 -->
+                <div onclick="selectSlide(7)" id="thumb-slide-7" class="p-2.5 rounded-xl bg-indigo-950/70 border border-indigo-500/50 text-indigo-200 text-xs font-bold flex items-center justify-between cursor-pointer shadow-sm shadow-indigo-950/50">
+                    <div class="flex items-center gap-2 truncate">
+                        <span class="w-5 h-5 rounded-md bg-indigo-600 text-white flex items-center justify-center font-mono text-[10px]">7</span>
+                        <span class="truncate">Human-Centered AI</span>
+                    </div>
+                    <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+                </div>
+                <div onclick="selectSlide(8)" id="thumb-slide-8" class="p-2.5 rounded-xl bg-slate-900/80 border border-slate-800/80 text-slate-400 text-xs font-medium flex items-center gap-2 cursor-pointer hover:bg-slate-800/60 hover:text-slate-200 transition">
+                    <span class="w-5 h-5 rounded-md bg-slate-800 flex items-center justify-center font-mono text-[10px]">8</span>
+                    <span class="truncate">Error Recovery Paths</span>
+                </div>
+            </div>
+
+            <!-- DYNAMIC TESTER INSTRUCTION CARD -->
+            <div class="p-3.5 bg-slate-950/90 border-t border-slate-800 text-[11px] space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="font-bold text-indigo-300 flex items-center gap-1.5">
+                        <i class="fa-solid fa-lightbulb text-amber-400"></i> Nhiệm vụ tương tác:
+                    </span>
+                    <span id="instruction-pill" class="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase bg-indigo-900/60 text-indigo-300 border border-indigo-700/50">Option A</span>
+                </div>
+                <p id="mode-instruction-text" class="leading-relaxed text-slate-300 font-normal">
+                    Bạn đang đóng vai trò người học. Hãy <strong class="text-white underline decoration-indigo-400">click hoặc bôi đen</strong> đoạn văn bản trên Slide 7 để kích hoạt thanh công cụ AI nổi.
+                </p>
+                <div class="pt-1 flex items-center gap-2 text-[10px] text-slate-400 font-mono">
+                    <i class="fa-solid fa-shield-halved text-emerald-400"></i> Phân quyền: <span id="agency-label" class="text-slate-200 font-semibold">User kiểm soát 100%</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CENTER CANVAS: SLIDE READER WORKSPACE -->
+        <main class="flex-grow flex flex-col bg-slate-950 overflow-hidden relative">
+
+            <!-- SLIDE TOP TOOLBAR (SIMULATING VLEARN READER TOOLS) -->
+            <div class="bg-slate-900/80 border-b border-slate-800/80 px-4 py-2 flex flex-wrap items-center justify-between gap-2 shrink-0 z-20">
+                <!-- Tool Selectors -->
+                <div class="flex items-center space-x-1 sm:space-x-1.5 text-xs">
+                    <button onclick="setReaderTool('cursor')" id="tool-cursor" class="px-2.5 py-1.5 rounded-lg bg-indigo-600 text-white font-medium flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-arrow-pointer"></i> <span class="hidden sm:inline">Trỏ chuột</span>
+                    </button>
+                    <button onclick="setReaderTool('highlight')" id="tool-highlight" class="px-2.5 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 font-medium flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-highlighter text-amber-400"></i> <span class="hidden sm:inline">Highlight</span>
+                    </button>
+                    <button onclick="setReaderTool('khoanh')" id="tool-khoanh" class="px-2.5 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 font-medium flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-vector-square text-indigo-400"></i> <span class="hidden sm:inline">Khoanh vùng</span>
+                    </button>
+                    <button onclick="clearSlideMarks()" class="px-2 py-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-rose-400 font-medium transition" title="Xóa đánh dấu">
+                        <i class="fa-solid fa-eraser"></i>
+                    </button>
+                </div>
+
+                <!-- Slide Navigation & Zoom -->
+                <div class="flex items-center space-x-3 text-xs text-slate-300">
+                    <div class="flex items-center space-x-1 bg-slate-950 px-2 py-1 rounded-lg border border-slate-800">
+                        <button onclick="selectSlide(6)" class="p-1 hover:text-white"><i class="fa-solid fa-chevron-left text-[10px]"></i></button>
+                        <span class="px-1 font-mono font-bold text-indigo-400" id="current-slide-num">7</span>
+                        <span class="text-slate-500 font-mono">/ 43</span>
+                        <button onclick="selectSlide(8)" class="p-1 hover:text-white"><i class="fa-solid fa-chevron-right text-[10px]"></i></button>
+                    </div>
+                    <div class="flex items-center space-x-1 text-slate-400">
+                        <button class="p-1 hover:text-slate-200"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                        <span class="font-mono text-[11px]">100%</span>
+                        <button class="p-1 hover:text-slate-200"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE CANVAS VIEWPORT -->
+            <div id="slide-viewport" class="flex-grow p-4 md:p-8 flex items-center justify-center overflow-auto relative custom-scrollbar bg-radial from-slate-900 to-slate-950">
+                
+                <!-- SLIDE CARD (ACTUAL DESIGN THE EXPERIMENT FIXTURE) -->
+                <div id="slide-card" class="w-full max-w-3xl bg-white rounded-2xl shadow-2xl border border-slate-200 p-8 md:p-11 text-slate-900 relative transition-all duration-300 select-text">
+                    
+                    <!-- Watermark -->
+                    <div class="absolute top-3.5 right-6 text-[11px] font-mono text-slate-400 select-none flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                        VLEARN • HUNGKM@VINUNI.EDU.VN
+                    </div>
+
+                    <!-- Slide Header Title -->
+                    <div class="text-center space-y-3 mb-7">
+                        <span class="text-[11px] font-bold tracking-widest uppercase text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">
+                            Bài học 7 · Nguyên lý thiết kế AI
+                        </span>
+                        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                            Đừng hứa hẹn <span class="text-rose-600 underline decoration-rose-400 decoration-wavy decoration-2">quá khả năng</span> của AI
+                        </h2>
+                        
+                        <!-- TARGET TEXT FOR OPTION A CLICK/SELECTION -->
+                        <div id="target-selectable-text" class="inline-block p-2 rounded-xl cursor-pointer transition border border-transparent hover:border-indigo-300 hover:bg-indigo-50/70" onclick="triggerSelectionAction('Đây là vấn đề về kỳ vọng, không chỉ là vấn đề về độ chính xác')">
+                            <p class="text-slate-700 italic text-base md:text-lg font-medium">
+                                "Đây là vấn đề về <span id="concept-expectations" class="font-bold text-slate-950 underline decoration-indigo-500 decoration-4">kỳ vọng</span>, không chỉ là vấn đề về <span id="concept-capabilities" class="font-bold text-slate-950 underline decoration-amber-500 decoration-4">độ chính xác</span>"
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Quote Box -->
+                    <div class="my-6 p-5 bg-gradient-to-r from-slate-50 to-indigo-50/40 rounded-2xl border-l-4 border-indigo-600 shadow-sm relative">
+                        <blockquote class="text-base md:text-lg font-semibold text-slate-800 italic leading-relaxed">
+                            “Don’t let your UI write a check that your AI can’t cash.”
+                        </blockquote>
+                        <p class="text-right text-xs font-bold text-slate-500 mt-2">— Eytan Adar (2018)</p>
+                    </div>
+
+                    <!-- 2 Concept Boxes (For Option B Co-creation & General Learning) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                        <!-- Concept 1 Box -->
+                        <div id="box-concept-1" onclick="handleConceptBoxClick(1)" class="p-4 rounded-xl bg-indigo-50/90 border-2 border-indigo-200 hover:border-indigo-500 cursor-pointer space-y-1.5 relative transition-all duration-200 group">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-700">Guideline 1 (Microsoft)</span>
+                                <span id="c1-badge" class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-200/70 text-indigo-900 font-bold hidden group-hover:block">Click để nối</span>
+                            </div>
+                            <h4 class="font-bold text-indigo-950 text-sm">Make clear what the system can do</h4>
+                            <p class="text-xs text-indigo-900/80 leading-snug">Help the user understand what the AI system is capable of doing.</p>
+                        </div>
+
+                        <!-- Concept 2 Box -->
+                        <div id="box-concept-2" onclick="handleConceptBoxClick(2)" class="p-4 rounded-xl bg-amber-50/90 border-2 border-amber-200 hover:border-amber-500 cursor-pointer space-y-1.5 relative transition-all duration-200 group">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-800">Guideline 2 (Microsoft)</span>
+                                <span id="c2-badge" class="text-[10px] px-1.5 py-0.5 rounded bg-amber-200/70 text-amber-900 font-bold hidden group-hover:block">Click để nối</span>
+                            </div>
+                            <h4 class="font-bold text-amber-950 text-sm">Make clear how well the system can do it</h4>
+                            <p class="text-xs text-amber-900/80 leading-snug">Help the user understand how often the AI system may make mistakes.</p>
+                        </div>
+                    </div>
+
+                    <!-- OPTION B: DYNAMIC SVG CONNECTOR LINE (SHOWN ON CONNECT) -->
+                    <div id="option-b-connector-line" class="hidden absolute inset-0 pointer-events-none z-10">
+                        <svg class="w-full h-full" style="overflow: visible;">
+                            <defs>
+                                <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#6366f1" />
+                                    <stop offset="100%" stop-color="#f59e0b" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M 220 370 Q 380 430 550 370" fill="none" stroke="url(#lineGrad)" stroke-width="4" stroke-dasharray="8,8" class="animate-pulse" />
+                        </svg>
+                    </div>
+
+                    <!-- OPTION A: FLOATING ON-DEMAND AI TOOLBAR -->
+                    <div id="floating-toolbar" class="hidden absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 text-white rounded-2xl shadow-2xl border border-indigo-500/40 p-1.5 flex items-center space-x-1 z-30 animate-bounce-short">
+                        <button onclick="handleOptionAAction('explain')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm">
+                            <i class="fa-solid fa-sparkles text-amber-300"></i>
+                            <span>Giải thích đơn giản</span>
+                        </button>
+                        <button onclick="handleOptionAAction('example')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+                            <i class="fa-regular fa-lightbulb text-amber-400"></i>
+                            <span>Ví dụ thực tế</span>
+                        </button>
+                        <button onclick="handleOptionAAction('feynman')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-feather text-emerald-400"></i>
+                            <span>Dễ hiểu hơn</span>
+                        </button>
+                        <span class="text-slate-700">|</span>
+                        <button onclick="closeFloatingToolbar()" class="p-1.5 text-slate-400 hover:text-white rounded-lg transition" title="Đóng">
+                            <i class="fa-solid fa-xmark text-sm"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- OPTION B: FLOATING INTERACTIVE CONNECT BAR (FOR EASY TESTING) -->
+            <div id="khoanh-instruction-bar" class="hidden absolute bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/95 backdrop-blur-md text-white px-5 py-3 rounded-2xl shadow-2xl border border-amber-500/40 flex items-center gap-4 z-30">
+                <div class="flex items-center gap-2.5 text-xs font-medium text-amber-200">
+                    <span class="w-6 h-6 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center font-black text-xs">B</span>
+                    <span>Click lần lượt 2 ô <strong>Guideline 1 & 2</strong> trên Slide để tạo Mini-Quiz:</span>
+                </div>
+                <button onclick="triggerOptionBConnectDemo()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl transition shadow-md flex items-center gap-1.5">
+                    <i class="fa-solid fa-link"></i> Nối thử tự động
+                </button>
+            </div>
+
+        </main>
+
+        <!-- RIGHT SIDEBAR: AI ASSISTANT & ENRICHED NOTES PANEL -->
+        <aside id="right-sidebar" class="w-full sm:w-[410px] bg-slate-900 border-l border-slate-800 flex flex-col shrink-0 z-30 shadow-2xl transition-all">
+            
+            <!-- Sidebar Header -->
+            <div class="p-3.5 border-b border-slate-800 bg-slate-950/70 flex items-center justify-between">
+                <div class="flex items-center space-x-2.5">
+                    <div id="ai-avatar-badge" class="w-8 h-8 rounded-xl bg-indigo-600/30 border border-indigo-500/40 text-indigo-400 flex items-center justify-center text-sm shadow-sm">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white text-xs flex items-center gap-1.5">
+                            Trợ lý Học tập VLearn AI
+                        </h3>
+                        <p id="sidebar-subtext" class="text-[10px] text-slate-400 font-mono">Option A: On-Demand User-Led</p>
+                    </div>
+                </div>
+                <span id="badge-mode" class="px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 font-bold text-[10px]">
+                    User-Led
+                </span>
+            </div>
+
+            <!-- AI PANEL BODY DYNAMIC CONTAINER -->
+            <div id="ai-panel-body" class="flex-grow p-4 overflow-y-auto custom-scrollbar space-y-4 text-xs">
+                
+                <!-- ==================== OPTION A: USER-LED STATES ==================== -->
+                <!-- State A1: Empty/Prompting -->
+                <div id="state-opt-A-empty" class="text-center py-14 space-y-3.5">
+                    <div class="w-14 h-14 bg-indigo-950/60 text-indigo-400 border border-indigo-500/30 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-inner">
+                        <i class="fa-regular fa-hand-pointer animate-float"></i>
+                    </div>
+                    <h4 class="font-bold text-slate-200 text-sm">Chế độ On-Demand (User Chủ động)</h4>
+                    <p class="text-xs text-slate-400 max-w-xs mx-auto leading-relaxed">
+                        AI chỉ hoạt động khi bạn ra lệnh. Hãy <span class="text-indigo-300 font-semibold cursor-pointer underline" onclick="triggerSelectionAction('Đây là vấn đề về kỳ vọng, không chỉ là vấn đề về độ chính xác')">click vào dòng trích dẫn trên slide</span> để kích hoạt giải thích.
+                    </p>
+                </div>
+
+                <!-- State A2: Result Card with Rich Formatting -->
+                <div id="state-opt-A-result" class="hidden space-y-3.5">
+                    <!-- Evidence quote -->
+                    <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1.5">
+                        <div class="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                            <span class="flex items-center gap-1"><i class="fa-solid fa-quote-left text-indigo-400"></i> Đoạn trích yêu cầu</span>
+                            <span class="text-indigo-400 font-semibold">Trích Slide 7</span>
+                        </div>
+                        <p id="opt-a-quoted-text" class="text-xs italic text-slate-300 font-medium">
+                            "Đây là vấn đề về kỳ vọng, không chỉ là vấn đề về độ chính xác"
+                        </p>
+                    </div>
+
+                    <!-- AI Main Explanation Card -->
+                    <div class="p-4 rounded-2xl bg-indigo-950/40 border border-indigo-500/30 space-y-3 shadow-lg glow-indigo">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-indigo-200 text-xs flex items-center gap-1.5">
+                                <i class="fa-solid fa-sparkles text-amber-400"></i> <span id="opt-a-heading">Giải thích đơn giản</span>
+                            </span>
+                            <span class="text-[9px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded-full font-bold border border-indigo-500/40">
+                                Tin cậy 95%
+                            </span>
+                        </div>
+                        <p id="opt-a-explanation" class="text-xs text-slate-300 leading-relaxed">
+                            Trong thiết kế Human-AI, sản phẩm thất bại không hẳn do thuật toán sai, mà do người dùng <strong>kỳ vọng AI hoàn hảo như con người</strong>. Khi AI sai sót không báo trước, người dùng mất lòng tin và bỏ sản phẩm ngay lập tức.
+                        </p>
+                        <!-- Contextual Analogy -->
+                        <div class="p-3 rounded-xl bg-slate-900/90 border border-indigo-500/20 space-y-1">
+                            <span class="font-bold text-amber-400 text-[11px] flex items-center gap-1">
+                                <i class="fa-solid fa-lightbulb text-xs"></i> Ví dụ đời sống dễ hình dung:
+                            </span>
+                            <p id="opt-a-example" class="italic text-[11px] text-slate-300 leading-relaxed">
+                                Giống như đặt xe ôm công nghệ: nếu tài xế hứa '5 phút tới' nhưng 15 phút chưa đến, bạn sẽ bực bội. Nhưng nếu app ghi 'Ước tính 10-15 phút vì trời mưa', bạn sẵn sàng chờ đợi trong thoải mái.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Error Recovery & Multi-choice Action Buttons -->
+                    <div class="space-y-2 pt-1">
+                        <div class="text-[11px] font-bold text-slate-400 flex items-center gap-1">
+                            <i class="fa-solid fa-sliders"></i> Tùy chỉnh phản hồi (Control & Recovery):
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="handleOptionAAction('feynman')" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl border border-slate-700 transition flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-feather text-emerald-400"></i> Feynman (Dễ hơn)
+                            </button>
+                            <button onclick="handleOptionAAction('technical')" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl border border-slate-700 transition flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-code text-indigo-400"></i> Đi sâu kỹ thuật
+                            </button>
+                        </div>
+                        <button onclick="saveOptionANote()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition shadow-md shadow-emerald-600/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-bookmark"></i> Lưu vào Sổ tay cá nhân
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ==================== OPTION B: CO-CREATION STATES ==================== -->
+                <div id="state-opt-B-quiz" class="hidden space-y-4">
+                    <!-- Context Card -->
+                    <div class="p-3.5 rounded-2xl bg-amber-950/30 border border-amber-500/30 space-y-2 glow-amber">
+                        <div class="flex items-center justify-between text-xs font-bold text-amber-300">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-diagram-project"></i> Tương tác 2 chiều (Co-Creation)</span>
+                            <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full border border-amber-500/30">Coach Mode</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Bạn đã kết nối 2 khái niệm: <strong class="text-amber-200 underline">Guideline 1 (Khả năng)</strong> và <strong class="text-amber-200 underline">Guideline 2 (Độ chính xác/Kỳ vọng)</strong>.
+                        </p>
+                    </div>
+
+                    <!-- Socratic Mini-Quiz -->
+                    <div class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
+                        <h4 class="font-bold text-amber-200 text-xs leading-relaxed flex items-start gap-2">
+                            <span class="w-5 h-5 rounded-md bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">?</span>
+                            <span>Thử thách suy luận: Nếu thiết kế UI khiến người học kỳ vọng quá cao so với khả năng AI, hệ quả nào sau đây là nghiêm trọng nhất?</span>
+                        </h4>
+                        
+                        <div class="space-y-2 pt-1">
+                            <div onclick="selectQuizAnswer(1)" id="quiz-opt-1" class="p-3 rounded-xl border border-slate-800 bg-slate-900/80 hover:border-amber-500/60 hover:bg-amber-950/20 cursor-pointer transition flex items-start gap-2.5">
+                                <span class="w-4 h-4 rounded-full border border-slate-600 flex items-center justify-center text-[10px] shrink-0 mt-0.5 font-bold">A</span>
+                                <span class="text-xs text-slate-300">Người học tin tưởng mù quáng (Automation Bias) và không kiểm tra lại lỗi sai khi làm bài thi.</span>
+                            </div>
+                            <div onclick="selectQuizAnswer(2)" id="quiz-opt-2" class="p-3 rounded-xl border border-slate-800 bg-slate-900/80 hover:border-amber-500/60 hover:bg-amber-950/20 cursor-pointer transition flex items-start gap-2.5">
+                                <span class="w-4 h-4 rounded-full border border-slate-600 flex items-center justify-center text-[10px] shrink-0 mt-0.5 font-bold">B</span>
+                                <span class="text-xs text-slate-300">Hệ thống máy chủ xử lý dữ liệu bị chậm hơn bình thường.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Open Reflection & AI Co-synthesis -->
+                    <div class="space-y-2">
+                        <label class="text-[11px] font-bold text-slate-400 block">Hoặc tự điền bài học/ví dụ thực tế của riêng bạn:</label>
+                        <textarea id="quiz-user-input" rows="2" placeholder="Nhập câu trả lời hoặc ví dụ của bạn..." class="w-full p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none resize-none"></textarea>
+                        
+                        <div class="flex items-center justify-between gap-2 pt-1">
+                            <button onclick="resetOptionBQuiz()" class="text-xs text-slate-400 hover:text-amber-300 font-semibold transition flex items-center gap-1">
+                                <i class="fa-solid fa-arrows-rotate text-[10px]"></i> Đổi câu hỏi khác
+                            </button>
+                            <button onclick="submitQuizAndSynthesize()" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs rounded-xl transition shadow-md shadow-amber-500/20">
+                                <i class="fa-solid fa-check-double"></i> Chốt & Lưu Note
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== OPTION C: AI-LED PROACTIVE STATES ==================== -->
+                <div id="state-opt-C-card" class="hidden space-y-4">
+                    <!-- Automatic Scanning Tag -->
+                    <div class="p-2.5 bg-emerald-950/40 border border-emerald-500/30 rounded-xl flex items-center justify-between text-xs text-emerald-300 glow-emerald">
+                        <span class="font-bold flex items-center gap-1.5">
+                            <i class="fa-solid fa-wand-magic-sparkles text-emerald-400 animate-spin-slow"></i> AI Proactive Enriched Note
+                        </span>
+                        <span class="text-[9px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-bold border border-emerald-500/40">
+                            Tự động quét
+                        </span>
+                    </div>
+
+                    <!-- Enriched Content Area (Read / Edit Mode) -->
+                    <div id="opt-c-display-area" class="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-3">
+                        <div class="space-y-1">
+                            <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider font-mono">Khái niệm trọng tâm Slide 7</span>
+                            <h4 class="font-bold text-white text-xs">Cân bằng Kỳ vọng (Expectations) vs. Khả năng (Capabilities)</h4>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            AI chủ động phân tích bài học: Mục tiêu là ngăn ngừa <em>thất vọng do kỳ vọng ảo</em>. Khi xây dựng AI Notes, UI phải công khai các trường hợp AI có thể hallucinate (bịa đặt) thay vì khẳng định độ chính xác 100%.
+                        </p>
+                        <div class="p-3 rounded-xl bg-indigo-950/40 border border-indigo-500/20 space-y-1">
+                            <span class="text-[10px] font-bold text-indigo-300 flex items-center gap-1">
+                                <i class="fa-solid fa-sparkles text-amber-400"></i> Ví dụ AI tự tạo kèm theo:
+                            </span>
+                            <p class="text-[11px] text-slate-300 italic leading-relaxed">
+                                Trong ứng dụng học tập, gắn nhãn badge "Gợi ý bởi AI - Hãy kiểm tra lại trước khi chép vào bài tập lớn" để sinh viên luôn giữ tư duy phản biện.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Edit Textarea for Inline Edit Recovery -->
+                    <div id="opt-c-edit-area" class="hidden space-y-2">
+                        <div class="flex items-center justify-between text-xs text-indigo-300 font-bold">
+                            <span>Chỉnh sửa nội dung ghi chú:</span>
+                            <span class="text-[10px] text-slate-400 font-normal">Tùy biến của riêng bạn</span>
+                        </div>
+                        <textarea id="opt-c-textarea" rows="5" class="w-full p-3 rounded-xl bg-slate-950 border border-indigo-500/50 text-xs text-slate-200 font-sans focus:ring-2 focus:ring-indigo-500 outline-none leading-relaxed">Khái niệm: Đừng hứa hẹn quá khả năng của AI (Expectations vs. Capabilities).
+Ý nghĩa: Luôn đặt kỳ vọng thực tế cho người dùng để tránh mất niềm tin khi AI mắc lỗi.
+Ví dụ VLearn: Đánh nhãn cảnh báo rõ ràng khi AI tóm tắt tài liệu chuyên ngành.</textarea>
+                    </div>
+
+                    <div class="text-[10px] text-slate-500 italic text-center">
+                        * Tự động sinh bởi AI Proactive Agent — Kiểm tra trước khi đưa vào bài ôn
+                    </div>
+
+                    <!-- Option C Actions -->
+                    <div class="space-y-2">
+                        <div class="grid grid-cols-2 gap-2">
+                            <button id="btn-opt-c-edit" onclick="toggleEditOptionC()" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl border border-slate-700 transition flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-pen-to-square text-indigo-400"></i> <span id="lbl-c-edit">Chỉnh sửa</span>
+                            </button>
+                            <button onclick="dismissOptionCCard()" class="p-2 bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 text-xs font-semibold rounded-xl border border-rose-800/40 transition flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-eye-slash"></i> Ẩn thẻ
+                            </button>
+                        </div>
+                        <button onclick="saveOptionCNote()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition shadow-md shadow-emerald-600/30 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-bookmark"></i> Lưu vào Sổ tay cá nhân
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- BOTTOM GENERAL CHAT INPUT FIXTURE -->
+            <div class="p-3.5 border-t border-slate-800 bg-slate-950/80">
+                <div class="relative flex items-center">
+                    <input type="text" id="chat-input-field" onkeydown="if(event.key==='Enter') sendGeneralChat()" placeholder="Hỏi trợ giảng AI bất kỳ điều gì..." class="w-full pl-3.5 pr-10 py-2.5 text-xs bg-slate-900 text-slate-200 placeholder-slate-500 border border-slate-700/80 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+                    <button onclick="sendGeneralChat()" class="absolute right-2 p-1.5 text-indigo-400 hover:text-indigo-200 rounded-lg transition">
+                        <i class="fa-solid fa-paper-plane text-xs"></i>
+                    </button>
+                </div>
+                <div class="text-[10px] text-slate-500 text-center mt-1.5 font-mono">
+                    Human-AI Design · Recovery Path Sẵn Sàng
+                </div>
+            </div>
+
+        </aside>
+
+    </div>
+
+    <!-- ==================== NOTEBOOK DRAWER (SỔ TAY CÁ NHÂN) ==================== -->
+    <div id="notebook-drawer" class="fixed inset-y-0 right-0 w-full max-w-md bg-slate-900 shadow-2xl border-l border-slate-800 z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
+        <!-- Header -->
+        <div class="p-4 border-b border-slate-800 bg-slate-950 text-white flex justify-between items-center">
+            <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-xl bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center">
+                    <i class="fa-solid fa-book-bookmark text-sm"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm">Sổ tay Học tập Cá nhân</h3>
+                    <p class="text-[10px] text-slate-400 font-mono">Đồng bộ từ các phiên tương tác AI</p>
+                </div>
+            </div>
+            <button onclick="toggleNotebookDrawer()" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800">
+                <i class="fa-solid fa-xmark text-base"></i>
+            </button>
+        </div>
+        
+        <!-- Notebook List -->
+        <div id="notebook-items-list" class="flex-grow p-4 overflow-y-auto space-y-3 custom-scrollbar">
+            <!-- Rendered by JS -->
+            <div id="notebook-empty-msg" class="text-center py-16 text-slate-500 text-xs space-y-2">
+                <i class="fa-regular fa-folder-open text-3xl text-slate-600"></i>
+                <p>Chưa có ghi chú nào được lưu.<br>Hãy thử nghiệm Option A, B, C và bấm <strong>"Lưu vào Sổ tay"</strong>.</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="p-3 bg-slate-950 border-t border-slate-800 flex justify-between items-center text-xs">
+            <button onclick="exportNotebookToClipboard()" class="text-indigo-400 hover:text-indigo-300 font-semibold flex items-center gap-1.5">
+                <i class="fa-solid fa-copy"></i> Copy Markdown
+            </button>
+            <button onclick="clearNotebook()" class="text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-trash-can text-[11px]"></i> Xóa tất cả
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== TESTER RUBRIC & 5 GATES MODAL ==================== -->
+    <div id="tester-guide-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 text-xs">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold">
+                        5G
+                    </span>
+                    <div>
+                        <h3 class="text-white font-bold text-sm">Tiêu Chí 5 Gate Đánh Giá (Group 3H)</h3>
+                        <p class="text-[11px] text-slate-400">Kiểm tra tính hoàn thiện của Micro-Prototype trước khi nộp bài</p>
+                    </div>
+                </div>
+                <button onclick="toggleTesterGuideModal()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="space-y-2.5 max-h-[60vh] overflow-y-auto custom-scrollbar pr-1">
+                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                    <span class="font-bold text-indigo-300">Gate 1: Evidence Continuity</span>
+                    <p class="text-slate-300">Hypothesis Problem nối trực tiếp từ bối cảnh học viên gặp slide khó, thiếu ví dụ theo ngữ cảnh phù hợp.</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                    <span class="font-bold text-amber-300">Gate 2: Meaningful Options</span>
+                    <p class="text-slate-300">Cả 3 Options A, B, C cùng giải bài toán trên Slide 7 nhưng khác biệt cốt lõi về <strong>cơ chế chia việc Human-AI</strong> (User-Led vs Co-Creation vs AI-Led).</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                    <span class="font-bold text-emerald-300">Gate 3: Human Control</span>
+                    <p class="text-slate-300">Mỗi option thể hiện rõ Agency, Uncertainty (trích dẫn nguồn, disclaimer) và đường Recovery (Sửa, Đổi câu hỏi, Làm đơn giản hơn).</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                    <span class="font-bold text-cyan-300">Gate 4: Test-ready</span>
+                    <p class="text-slate-300">Tester ngoài nhóm có thể tự bấm test trực tiếp cả 3 phương án chỉ với 1 click chuyển tab.</p>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                    <span class="font-bold text-purple-300">Gate 5: Learning & Synthesis</span>
+                    <p class="text-slate-300">Thu thập feedback độc lập cho từng option và đúc kết Next Change trong tài liệu nhóm.</p>
+                </div>
+            </div>
+
+            <div class="text-right pt-2 border-t border-slate-800">
+                <button onclick="toggleTesterGuideModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition">
+                    Đã hiểu & Tiếp tục Test
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+    <script>
+        // Global State Variables
+        let currentOption = 'A';
+        let currentSlide = 7;
+        let selectedConceptBoxes = [];
+        let isEditingOptionC = false;
+        let activeReaderTool = 'cursor';
+        let savedNotes = JSON.parse(localStorage.getItem('vlearn_group3h_notes') || '[]');
+
+        // Initialize on load
+        window.onload = function() {
+            updateNotebookUI();
+            switchOption('A');
+        };
+
+        // Switch between Option A, B, C
+        function switchOption(option) {
+            currentOption = option;
+
+            // Reset Sub-states
+            closeFloatingToolbar();
+            clearOptionBSelection();
+
+            // Tab button styles
+            ['A', 'B', 'C'].forEach(opt => {
+                const btn = document.getElementById(`btn-opt-${opt}`);
+                if (opt === option) {
+                    btn.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 bg-indigo-600 text-white shadow-md shadow-indigo-600/30";
+                } else {
+                    btn.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 text-slate-400 hover:text-white";
+                }
+            });
+
+            // Hide panels
+            document.getElementById('state-opt-A-empty').classList.add('hidden');
+            document.getElementById('state-opt-A-result').classList.add('hidden');
+            document.getElementById('state-opt-B-quiz').classList.add('hidden');
+            document.getElementById('state-opt-C-card').classList.add('hidden');
+            document.getElementById('khoanh-instruction-bar').classList.add('hidden');
+            document.getElementById('option-b-connector-line').classList.add('hidden');
+
+            const badge = document.getElementById('badge-mode');
+            const subtext = document.getElementById('sidebar-subtext');
+            const instructionText = document.getElementById('mode-instruction-text');
+            const instructionPill = document.getElementById('instruction-pill');
+            const agencyLabel = document.getElementById('agency-label');
+            const avatarBadge = document.getElementById('ai-avatar-badge');
+
+            if (option === 'A') {
+                badge.innerText = "User-Led";
+                badge.className = "px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 font-bold text-[10px]";
+                subtext.innerText = "Option A: On-Demand User-Led";
+                instructionPill.innerText = "Option A";
+                instructionPill.className = "text-[9px] px-1.5 py-0.5 rounded font-bold uppercase bg-indigo-900/60 text-indigo-300 border border-indigo-700/50";
+                instructionText.innerHTML = "Bạn đang ở <strong>Option A (User-Led)</strong>. Hãy click/bôi đen dòng chữ trên Slide 7 để hiện thanh công cụ nổi.";
+                agencyLabel.innerText = "User kiểm soát 100% (Don't Act)";
+                avatarBadge.className = "w-8 h-8 rounded-xl bg-indigo-600/30 border border-indigo-500/40 text-indigo-400 flex items-center justify-center text-sm shadow-sm";
+                document.getElementById('state-opt-A-empty').classList.remove('hidden');
+            } else if (option === 'B') {
+                badge.innerText = "Co-Creation";
+                badge.className = "px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold text-[10px]";
+                subtext.innerText = "Option B: Interactive Connector";
+                instructionPill.innerText = "Option B";
+                instructionPill.className = "text-[9px] px-1.5 py-0.5 rounded font-bold uppercase bg-amber-900/60 text-amber-300 border border-amber-700/50";
+                instructionText.innerHTML = "Bạn đang ở <strong>Option B (Co-Creation)</strong>. Hãy click vào 2 ô Guideline bên dưới hoặc bấm nút demo để AI tạo thử thách Mini-Quiz.";
+                agencyLabel.innerText = "Hợp tác 2 chiều (Ask First)";
+                avatarBadge.className = "w-8 h-8 rounded-xl bg-amber-600/30 border border-amber-500/40 text-amber-400 flex items-center justify-center text-sm shadow-sm";
+                document.getElementById('khoanh-instruction-bar').classList.remove('hidden');
+                document.getElementById('state-opt-B-quiz').classList.remove('hidden');
+            } else if (option === 'C') {
+                badge.innerText = "AI-Led";
+                badge.className = "px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold text-[10px]";
+                subtext.innerText = "Option C: Proactive Enriched Notes";
+                instructionPill.innerText = "Option C";
+                instructionPill.className = "text-[9px] px-1.5 py-0.5 rounded font-bold uppercase bg-emerald-900/60 text-emerald-300 border border-emerald-700/50";
+                instructionText.innerHTML = "Bạn đang ở <strong>Option C (AI-Led)</strong>. AI tự động quét slide khi mở và tạo sẵn thẻ ghi chú bên phải để bạn xem/sửa.";
+                agencyLabel.innerText = "AI chủ động (Proactive Act)";
+                avatarBadge.className = "w-8 h-8 rounded-xl bg-emerald-600/30 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-sm shadow-sm";
+                document.getElementById('state-opt-C-card').classList.remove('hidden');
+            }
+        }
+
+        // Option A: Trigger Context Toolbar
+        function triggerSelectionAction(text) {
+            if (currentOption === 'A') {
+                const target = document.getElementById('target-selectable-text');
+                target.classList.add('selection-active');
+                const toolbar = document.getElementById('floating-toolbar');
+                toolbar.classList.remove('hidden');
+                showToast('Đã chọn đoạn trích! Chọn hành động trên Toolbar nổi.');
+            }
+        }
+
+        function closeFloatingToolbar() {
+            const target = document.getElementById('target-selectable-text');
+            if (target) target.classList.remove('selection-active');
+            const toolbar = document.getElementById('floating-toolbar');
+            if (toolbar) toolbar.classList.add('hidden');
+        }
+
+        function handleOptionAAction(type) {
+            closeFloatingToolbar();
+            document.getElementById('state-opt-A-empty').classList.add('hidden');
+            document.getElementById('state-opt-A-result').classList.remove('hidden');
+
+            const heading = document.getElementById('opt-a-heading');
+            const explanation = document.getElementById('opt-a-explanation');
+            const example = document.getElementById('opt-a-example');
+
+            if (type === 'explain') {
+                heading.innerText = "Giải thích đơn giản";
+                explanation.innerHTML = "Trong thiết kế Human-AI, sản phẩm thất bại không hẳn do thuật toán sai, mà do người dùng <strong>kỳ vọng AI hoàn hảo như con người</strong>. Khi AI sai sót không báo trước, người dùng mất lòng tin và bỏ sản phẩm ngay lập tức.";
+                example.innerHTML = "Giống như đặt xe ôm công nghệ: nếu tài xế hứa '5 phút tới' nhưng 15 phút chưa đến, bạn sẽ bực bội. Nhưng nếu app ghi 'Ước tính 10-15 phút vì trời mưa', bạn sẵn sàng chờ đợi trong thoải mái.";
+                showToast('AI đã hoàn thành giải thích theo yêu cầu!');
+            } else if (type === 'example') {
+                heading.innerText = "Ví dụ thực tế mở rộng";
+                explanation.innerHTML = "Ví dụ điển hình: Google Maps không bao giờ hứa chắc chắn 100% thời gian tới đích, mà đưa ra khoảng thời gian kèm cảnh báo 'Đoạn đường có thể đông đúc' để điều chỉnh kỳ vọng người lái.";
+                example.innerHTML = "Trong ứng dụng VLearn: AI ghi rõ 'Độ chính xác tóm tắt 90% đối với tài liệu tiếng Việt' để học viên chủ động đối chiếu slide.";
+                showToast('Đã sinh thêm ví dụ thực tế!');
+            } else if (type === 'feynman') {
+                heading.innerText = "Giải thích kiểu Feynman (Dễ nhất)";
+                explanation.innerHTML = "Hãy coi AI như một người bạn phụ việc nhanh nhẹn nhưng mới vào nghề: Bạn chỉ nên nhờ bạn ấy làm những việc rõ ràng và luôn liếc mắt kiểm tra lại kết quả trước khi nộp bài.";
+                example.innerHTML = "Đừng tin 100% những gì AI viết ra — Hãy coi AI là bản nháp đầu tiên.";
+                showToast('Đã chuyển sang chế độ Feynman siêu dễ hiểu!');
+            } else if (type === 'technical') {
+                heading.innerText = "Phân tích Kỹ thuật sâu";
+                explanation.innerHTML = "Khái niệm này liên quan đến <em>Probabilistic Systems</em> (Hệ thống xác suất). Không giống như phần mềm thông thường (Deterministic) cho ra kết quả cố định f(x) = y, AI sinh kết quả dựa trên phân phối xác suất P(Y|X), do đó luôn tồn tại phương sai và biên độ sai sót.";
+                example.innerHTML = "Áp dụng kỹ thuật Confidence Score & Threshold filtering để ẩn bớt các dự đoán có xác suất thấp.";
+                showToast('Đã cập nhật phân tích kỹ thuật sâu!');
+            }
+        }
+
+        function saveOptionANote() {
+            const heading = document.getElementById('opt-a-heading').innerText;
+            const explanation = document.getElementById('opt-a-explanation').innerText;
+            saveNoteToStorage({
+                title: `[Opt A] ${heading}`,
+                content: explanation,
+                slide: "Slide 7",
+                option: "A"
+            });
+        }
+
+        // Option B: Co-Creation Box Clicking & Logic
+        function handleConceptBoxClick(boxNum) {
+            if (currentOption !== 'B') {
+                showToast('Chuyển sang Option B để sử dụng tính năng nối khái niệm!');
+                return;
+            }
+
+            const box = document.getElementById(`box-concept-${boxNum}`);
+            if (!selectedConceptBoxes.includes(boxNum)) {
+                selectedConceptBoxes.push(boxNum);
+                box.classList.add('connector-active');
+            }
+
+            if (selectedConceptBoxes.length === 2) {
+                document.getElementById('option-b-connector-line').classList.remove('hidden');
+                showToast('Đã nối thành công 2 Guideline! Hãy hoàn thành Mini-Quiz bên phải.');
+            } else {
+                showToast(`Đã chọn Guideline ${boxNum}. Hãy chọn tiếp ô còn lại.`);
+            }
+        }
+
+        function triggerOptionBConnectDemo() {
+            selectedConceptBoxes = [1, 2];
+            document.getElementById('box-concept-1').classList.add('connector-active');
+            document.getElementById('box-concept-2').classList.add('connector-active');
+            document.getElementById('option-b-connector-line').classList.remove('hidden');
+            showToast('Đã nối tự động 2 khái niệm! Thử thách Mini-Quiz đã sẵn sàng.');
+        }
+
+        function clearOptionBSelection() {
+            selectedConceptBoxes = [];
+            const b1 = document.getElementById('box-concept-1');
+            const b2 = document.getElementById('box-concept-2');
+            if (b1) b1.classList.remove('connector-active');
+            if (b2) b2.classList.remove('connector-active');
+            const line = document.getElementById('option-b-connector-line');
+            if (line) line.classList.add('hidden');
+        }
+
+        function selectQuizAnswer(index) {
+            const opt1 = document.getElementById('quiz-opt-1');
+            const opt2 = document.getElementById('quiz-opt-2');
+
+            if (index === 1) {
+                opt1.className = "p-3 rounded-xl border border-amber-500 bg-amber-950/40 cursor-pointer transition flex items-start gap-2.5 text-amber-200 font-semibold";
+                opt2.className = "p-3 rounded-xl border border-slate-800 bg-slate-900/80 cursor-pointer transition flex items-start gap-2.5 opacity-60";
+                showToast('Chính xác! Hiện tượng Automation Bias khiến người học mất tư duy phản biện.');
+            } else {
+                opt2.className = "p-3 rounded-xl border border-amber-500 bg-amber-950/40 cursor-pointer transition flex items-start gap-2.5 text-amber-200 font-semibold";
+                opt1.className = "p-3 rounded-xl border border-slate-800 bg-slate-900/80 cursor-pointer transition flex items-start gap-2.5 opacity-60";
+                showToast('Lựa chọn B chưa tối ưu. Hãy đọc giải thích của đáp án A nhé!');
+            }
+        }
+
+        function resetOptionBQuiz() {
+            document.getElementById('quiz-user-input').value = '';
+            showToast('Đã làm mới câu hỏi gợi mở khác từ AI Coach!');
+        }
+
+        function submitQuizAndSynthesize() {
+            const customVal = document.getElementById('quiz-user-input').value.trim();
+            const noteText = customVal ? customVal : "Người học dễ mắc lỗi Automation Bias (tin tưởng mù quáng) nếu UI không làm rõ giới hạn của AI.";
+            saveNoteToStorage({
+                title: `[Opt B - CoCreation] Bài học về Cân bằng Kỳ vọng & Khả năng AI`,
+                content: noteText,
+                slide: "Slide 7",
+                option: "B"
+            });
+        }
+
+        // Option C: AI-Led Proactive Logic
+        function toggleEditOptionC() {
+            isEditingOptionC = !isEditingOptionC;
+            const displayArea = document.getElementById('opt-c-display-area');
+            const editArea = document.getElementById('opt-c-edit-area');
+            const lbl = document.getElementById('lbl-c-edit');
+
+            if (isEditingOptionC) {
+                displayArea.classList.add('hidden');
+                editArea.classList.remove('hidden');
+                lbl.innerText = "Lưu nháp";
+            } else {
+                displayArea.classList.remove('hidden');
+                editArea.classList.add('hidden');
+                lbl.innerText = "Chỉnh sửa";
+                showToast('Đã lưu nội dung chỉnh sửa cá nhân!');
+            }
+        }
+
+        function dismissOptionCCard() {
+            document.getElementById('state-opt-C-card').classList.add('hidden');
+            showToast('Đã ẩn thẻ AI Note (Đường Recovery kích hoạt).');
+        }
+
+        function saveOptionCNote() {
+            const textareaVal = document.getElementById('opt-c-textarea').value;
+            saveNoteToStorage({
+                title: `[Opt C - AI-Led] Proactive Note Slide 7`,
+                content: textareaVal,
+                slide: "Slide 7",
+                option: "C"
+            });
+        }
+
+        // Notebook Data Storage
+        function saveNoteToStorage(noteObj) {
+            const newNote = {
+                id: Date.now(),
+                title: noteObj.title,
+                content: noteObj.content,
+                slide: noteObj.slide,
+                option: noteObj.option,
+                time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+            };
+            savedNotes.unshift(newNote);
+            localStorage.setItem('vlearn_group3h_notes', JSON.stringify(savedNotes));
+            updateNotebookUI();
+            showToast('Đã lưu vào Sổ tay học tập!');
+        }
+
+        function updateNotebookUI() {
+            document.getElementById('notebook-count').innerText = savedNotes.length;
+            const container = document.getElementById('notebook-items-list');
+
+            if (savedNotes.length === 0) {
+                container.innerHTML = `
+                    <div id="notebook-empty-msg" class="text-center py-16 text-slate-500 text-xs space-y-2">
+                        <i class="fa-regular fa-folder-open text-3xl text-slate-600"></i>
+                        <p>Chưa có ghi chú nào được lưu.<br>Hãy thử nghiệm Option A, B, C và bấm <strong>"Lưu vào Sổ tay"</strong>.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+            savedNotes.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 text-xs space-y-2 shadow-sm relative group";
+                
+                let optColor = item.option === 'A' ? 'text-indigo-400 border-indigo-500/30 bg-indigo-950/40' : (item.option === 'B' ? 'text-amber-400 border-amber-500/30 bg-amber-950/40' : 'text-emerald-400 border-emerald-500/30 bg-emerald-950/40');
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between font-bold">
+                        <span class="px-1.5 py-0.5 rounded text-[10px] border ${optColor}">Opt ${item.option}</span>
+                        <div class="flex items-center gap-2 text-[10px] text-slate-400 font-mono">
+                            <span>${item.slide}</span>
+                            <span>•</span>
+                            <span>${item.time}</span>
+                        </div>
+                    </div>
+                    <h5 class="text-slate-200 font-semibold text-xs leading-snug">${item.title}</h5>
+                    <p class="text-slate-400 text-[11px] leading-relaxed line-clamp-3">${item.content}</p>
+                    <div class="flex justify-end pt-1 border-t border-slate-800/80">
+                        <button onclick="deleteNote(${item.id})" class="text-rose-400 hover:text-rose-300 text-[11px] font-medium transition">
+                            <i class="fa-solid fa-trash-can text-[10px]"></i> Xóa
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function deleteNote(id) {
+            savedNotes = savedNotes.filter(n => n.id !== id);
+            localStorage.setItem('vlearn_group3h_notes', JSON.stringify(savedNotes));
+            updateNotebookUI();
+            showToast('Đã xóa ghi chú!');
+        }
+
+        function clearNotebook() {
+            if (confirm('Bạn có chắc muốn xóa tất cả ghi chú trong sổ tay?')) {
+                savedNotes = [];
+                localStorage.removeItem('vlearn_group3h_notes');
+                updateNotebookUI();
+                showToast('Đã dọn sạch sổ tay!');
+            }
+        }
+
+        function exportNotebookToClipboard() {
+            if (savedNotes.length === 0) {
+                showToast('Sổ tay đang trống!');
+                return;
+            }
+            let text = `# SỔ TAY HỌC TẬP VLEARN (GROUP 3H - DAY 18)\n\n`;
+            savedNotes.forEach(n => {
+                text += `### ${n.title} (${n.slide} - Opt ${n.option} lúc ${n.time})\n${n.content}\n\n`;
+            });
+            navigator.clipboard.writeText(text);
+            showToast('Đã sao chép toàn bộ sổ tay sang Markdown Clipboard!');
+        }
+
+        // Drawers & Modals
+        function toggleNotebookDrawer() {
+            document.getElementById('notebook-drawer').classList.toggle('translate-x-full');
+        }
+
+        function toggleTesterGuideModal() {
+            document.getElementById('tester-guide-modal').classList.toggle('hidden');
+        }
+
+        // General Chat
+        function sendGeneralChat() {
+            const input = document.getElementById('chat-input-field');
+            const val = input.value.trim();
+            if (val) {
+                showToast(`AI đang suy nghĩ câu trả lời cho: "${val}"`);
+                input.value = '';
+            }
+        }
+
+        // Reader Tools
+        function setReaderTool(tool) {
+            activeReaderTool = tool;
+            ['cursor', 'highlight', 'khoanh'].forEach(t => {
+                const btn = document.getElementById(`tool-${t}`);
+                if (t === tool) {
+                    btn.className = "px-2.5 py-1.5 rounded-lg bg-indigo-600 text-white font-medium flex items-center gap-1.5 transition";
+                } else {
+                    btn.className = "px-2.5 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300 font-medium flex items-center gap-1.5 transition";
+                }
+            });
+
+            if (tool === 'khoanh') {
+                switchOption('B');
+            } else if (tool === 'highlight') {
+                switchOption('A');
+            }
+        }
+
+        function clearSlideMarks() {
+            clearOptionBSelection();
+            closeFloatingToolbar();
+            showToast('Đã xóa các đánh dấu trên slide!');
+        }
+
+        function selectSlide(num) {
+            currentSlide = num;
+            document.getElementById('current-slide-num').innerText = num;
+            [5, 6, 7, 8].forEach(n => {
+                const el = document.getElementById(`thumb-slide-${n}`);
+                if (el) {
+                    if (n === num) {
+                        el.className = "p-2.5 rounded-xl bg-indigo-950/70 border border-indigo-500/50 text-indigo-200 text-xs font-bold flex items-center justify-between cursor-pointer shadow-sm";
+                    } else {
+                        el.className = "p-2.5 rounded-xl bg-slate-900/80 border border-slate-800/80 text-slate-400 text-xs font-medium flex items-center gap-2 cursor-pointer hover:bg-slate-800/60 transition";
+                    }
+                }
+            });
+            showToast(`Đã chuyển sang Slide ${num}`);
+        }
+
+        function resetPrototypeState() {
+            switchOption('A');
+            clearOptionBSelection();
+            closeFloatingToolbar();
+            showToast('Đã khôi phục toàn bộ trạng thái ban đầu!');
+        }
+
+        // Custom Toast Notification
+        function showToast(msg) {
+            const existing = document.getElementById('custom-toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.id = 'custom-toast';
+            toast.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs px-4 py-2.5 rounded-2xl shadow-2xl border border-slate-700 z-50 flex items-center gap-2.5 animate-bounce-short';
+            toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> <span>${msg}</span>`;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                if (toast) toast.remove();
+            }, 2800);
+        }
+    </script>
+</body>
+</html>
